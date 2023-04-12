@@ -17,8 +17,8 @@ public class Book {
 
     private String title;
     private String author;
-    private Float price;
-    private Float avg_reviews;
-    private Integer pages;
+    private String price;
+    private String avg_reviews;
+    private String pages;
     private Integer stars;
 }
