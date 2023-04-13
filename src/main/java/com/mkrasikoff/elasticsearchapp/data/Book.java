@@ -13,12 +13,12 @@ import org.springframework.data.elasticsearch.annotations.Document;
 public class Book {
 
     @Id
-    private String id;
+    private Integer id;
 
     private String title;
     private String author;
-    private String price;
-    private String avg_reviews;
-    private String pages;
+    private Float price;
+    private Float avg_reviews;
+    private Integer pages;
     private Integer stars;
 }
