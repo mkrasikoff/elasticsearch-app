@@ -1,0 +1,15 @@
+{
+  "description": "lowercase title and author",
+  "processors": [
+    {
+      "lowercase": {
+        "field": "title"
+      }
+    },
+    {
+      "lowercase": {
+        "field": "author"
+      }
+    }
+  ]
+}
