@@ -1,0 +1,35 @@
+{
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text"
+      },
+      "author": {
+        "type": "text",
+        "analyzer": "semicolon_analyzer"
+      },
+      "price": {
+        "type": "float"
+      },
+      "avg_reviews": {
+        "type": "float"
+      },
+      "pages": {
+        "type": "integer"
+      },
+      "stars": {
+        "type": "integer"
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "semicolon_analyzer": {
+          "type": "pattern",
+          "pattern": ";\\s*"
+        }
+      }
+    }
+  }
+}

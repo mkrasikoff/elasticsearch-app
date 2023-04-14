@@ -1,7 +1,9 @@
 package com.mkrasikoff.elasticsearchapp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mkrasikoff.elasticsearchapp.csv.CsvUtils;
 import com.mkrasikoff.elasticsearchapp.data.Book;
+import com.mkrasikoff.elasticsearchapp.elasticsearch.ElasticSearchUtils;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.client.RequestOptions;
@@ -22,7 +24,11 @@ public class DataService {
     @Autowired
     private RestHighLevelClient restHighLevelClient;
 
-    public void processCsvFile(File file) throws IOException {
+    @Autowired
+    private ElasticSearchUtils elasticSearchUtils;
+
+    // REMOVE - DEPRECATED
+    public void oldProcessCsvFile(File file) throws IOException {
         try (FileReader fileReader = new FileReader(file)) {
             List<Book> csvDataList = new CsvToBeanBuilder<Book>(fileReader)
                     .withType(Book.class)
@@ -68,5 +74,10 @@ public class DataService {
                 .id(UUID.randomUUID().toString())
                 .source(builder);
         restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
+    }
+
+    public void processCsvFile(String csvFilePath) throws IOException {
+        List<Book> books = new CsvUtils().readCsvFile(csvFilePath);
+        elasticSearchUtils.indexBooks(books);
     }
 }

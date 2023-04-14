@@ -1,9 +1,13 @@
 package com.mkrasikoff.elasticsearchapp.controller;
 
+import com.mkrasikoff.elasticsearchapp.csv.CsvUtils;
+import com.mkrasikoff.elasticsearchapp.data.Book;
+import com.mkrasikoff.elasticsearchapp.elasticsearch.ElasticSearchUtils;
 import com.mkrasikoff.elasticsearchapp.service.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +32,7 @@ public class DataController {
         try {
             File tempFile = File.createTempFile("temp-", ".csv");
             file.transferTo(tempFile);
-            dataService.processCsvFile(tempFile);
+            dataService.oldProcessCsvFile(tempFile);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>("Error occurred while processing the CSV file.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,5 +51,10 @@ public class DataController {
         }
 
         return new ResponseEntity<>("JSON data processed successfully.", HttpStatus.OK);
+    }
+
+    @GetMapping("/process-csv")
+    public void processCsvFile () throws IOException {
+        dataService.processCsvFile("src/main/resources/csv/");
     }
 }

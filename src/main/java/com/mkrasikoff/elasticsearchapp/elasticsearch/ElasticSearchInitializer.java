@@ -1,10 +1,14 @@
-package com.mkrasikoff.elasticsearchapp.config;
+package com.mkrasikoff.elasticsearchapp.elasticsearch;
 
 import jakarta.annotation.PostConstruct;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
@@ -21,6 +25,11 @@ public class ElasticSearchInitializer {
     private RestHighLevelClient client;
 
     @PostConstruct
+    public void setup() throws IOException {
+        createPipeline();
+        createBookIndex();
+    }
+
     public void createPipeline() throws IOException {
         String pipelineName = "lowercase_pipeline";
         Path pipelinePath = Paths.get("src/main/resources/lowercase_pipeline.json");
@@ -50,4 +59,22 @@ public class ElasticSearchInitializer {
             System.out.println("Pipeline retrieval failed");
         }
     }
+
+    public void createBookIndex() throws IOException {
+        String indexName = "book-index";
+        Path mappingPath = Paths.get("src/main/resources/book_index_mapping.json");
+        String mappingJson = Files.readString(mappingPath);
+
+        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        request.mapping(mappingJson, XContentType.JSON);
+
+        CreateIndexResponse response = client.indices().create(request, RequestOptions.DEFAULT);
+
+        if (response.isAcknowledged()) {
+            System.out.println("Index created successfully");
+        } else {
+            System.out.println("Index creation failed");
+        }
+    }
+
 }

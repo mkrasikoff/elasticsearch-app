@@ -1,4 +1,4 @@
-package com.mkrasikoff.elasticsearchapp.config;
+package com.mkrasikoff.elasticsearchapp.elasticsearch;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -23,5 +23,10 @@ public class ElasticSearchConfig {
     public RestHighLevelClient restHighLevelClient() {
         HttpHost httpHost = new HttpHost(host, port, scheme);
         return new RestHighLevelClient(RestClient.builder(httpHost));
+    }
+
+    @Bean
+    public ElasticSearchUtils elasticsearchUtils() {
+        return new ElasticSearchUtils(restHighLevelClient());
     }
 }
